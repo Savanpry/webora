@@ -1,41 +1,11 @@
+/* Loader JS Start */
+
+
+
+/* Loader JS End */
+
+
 /* Sun Face JS Start */
-
-// if (document.querySelector('body')) {
-
-//   const sun = document.querySelectora('.sun__face-svg');
-
-//   let mouseX = 0;
-//   let mouseY = 0;
-//   let currentX = 0;
-//   let currentY = 0;
-
-//   document.addEventListener('mousemove', (e) => {
-//     mouseX = e.clientX;
-//     mouseY = e.clientY;
-//   });
-
-//   function animate() {
-//     currentX += (mouseX - currentX) * 0.08;
-//     currentY += (mouseY - currentY) * 0.08;
-
-//     const centerX = window.innerWidth / 2;
-//     const centerY = window.innerHeight / 2;
-
-//     let moveX = (currentX - centerX) * 0.05;
-//     let moveY = (currentY - centerY) * 0.05;
-
-//     moveX = Math.max(-10, Math.min(10, moveX));
-//     moveY = Math.max(-10, Math.min(10, moveY));
-
-//     sun.style.transform = `translate(${moveX}px, ${moveY}px)`;
-
-//     requestAnimationFrame(animate);
-//   }
-
-//   animate();
-
-// }
-
 
 if (document.querySelectorAll('.sun__face-svg').length) {
 
@@ -199,68 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 /* Rainbox SVG animation JS Start */
-
-/* window.addEventListener("load", () => {
-  const container = document.querySelector(".rainbox--sides");
-  if (!container) return;
-
-  const paths = container.querySelectorAll("path");
-  const lengths = [];
-
-  paths.forEach((path, i) => {
-    const len = path.getTotalLength();
-    lengths[i] = len;
-
-    path.style.strokeDasharray = len;
-    path.style.strokeDashoffset = len;
-  });
-
-  let progress = 0;
-  let target = 0;
-  let isLoaded = false;
-
-  function loadAnim() {
-    progress += 0.01;
-
-    paths.forEach((path, i) => {
-      path.style.strokeDashoffset = lengths[i] * (1 - progress);
-    });
-
-    if (progress < 1) {
-      requestAnimationFrame(loadAnim);
-    } else {
-      progress = 1;
-      target = 1;
-      isLoaded = true;
-      smoothLoop();
-    }
-  }
-
-  loadAnim();
-
-  window.addEventListener("wheel", (e) => {
-    if (!isLoaded) return;
-
-    const speed = 0.0015;
-
-    target -= e.deltaY * speed;
-
-    target = Math.min(Math.max(target, 0), 1);
-  });
-
-  function smoothLoop() {
-    progress += (target - progress) * 0.25;
-
-    paths.forEach((path, i) => {
-      path.style.strokeDashoffset = lengths[i] * (1 - progress);
-    });
-
-    requestAnimationFrame(smoothLoop);
-  }
-}); */
-
-
-
 
 window.addEventListener("load", () => {
   const container = document.querySelector(".rainbox--sides");
@@ -566,13 +474,6 @@ function initAccordion() {
 window.addEventListener("load", initAccordion);
 
 /* FAQ JS End */
-
-
-/* Loader JS Start */
-
-
-
-/* Loader JS End */
 
 
 /* About Bottom Shape JS Start */
