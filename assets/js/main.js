@@ -1,6 +1,10 @@
 /* Loader JS Start */
 
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
 
+window.scrollTo(0, 0);
 
 /* Loader JS End */
 
@@ -8,40 +12,46 @@
 /* Sun Face JS Start */
 
 if (document.querySelectorAll('.sun__face-svg').length) {
-
   const suns = document.querySelectorAll('.sun__face-svg');
 
-  let mouseX = 0;
-  let mouseY = 0;
-  let currentX = 0;
-  let currentY = 0;
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let currentX = mouseX;
+  let currentY = mouseY;
 
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
   });
 
-  function animate() {
-    currentX += (mouseX - currentX) * 0.08;
-    currentY += (mouseY - currentY) * 0.08;
-
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-
-    let moveX = (currentX - centerX) * 0.05;
-    let moveY = (currentY - centerY) * 0.05;
-
-    moveX = Math.max(-10, Math.min(10, moveX));
-    moveY = Math.max(-10, Math.min(10, moveY));
+  function animateSunFace() {
+    currentX += (mouseX - currentX) * 0.1;
+    currentY += (mouseY - currentY) * 0.1;
 
     suns.forEach((sun) => {
-      sun.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      const parent = sun.closest('.sun--icon') || sun.closest('.footer--bottom--sun') || sun.parentElement;
+      if (!parent) return;
+
+      const rect = parent.getBoundingClientRect();
+      const sunCenterX = rect.left + rect.width / 2;
+      const sunCenterY = rect.top + rect.height / 2;
+
+      const scaleFactor = Math.min(rect.width, 200) / 200;
+      const maxOffset = 5 * scaleFactor;
+
+      let diffX = (currentX - sunCenterX) * 0.06;
+      let diffY = (currentY - sunCenterY) * 0.06;
+
+      diffX = Math.max(-maxOffset, Math.min(maxOffset, diffX));
+      diffY = Math.max(-maxOffset, Math.min(maxOffset, diffY));
+
+      sun.style.transform = `translate(calc(-50% + ${diffX.toFixed(2)}px), calc(-50% + ${diffY.toFixed(2)}px))`;
     });
 
-    requestAnimationFrame(animate);
+    requestAnimationFrame(animateSunFace);
   }
 
-  animate();
+  animateSunFace();
 }
 
 /* Sun Face JS End */
@@ -174,7 +184,14 @@ window.addEventListener("load", () => {
   const container = document.querySelector(".rainbox--sides");
   const bannerTitle = document.querySelector(".banner--title");
 
-  if (!container || !bannerTitle) return;
+  if (!container || !bannerTitle) {
+    document.body.classList.add("is--loaded");
+    return;
+  }
+
+  setTimeout(() => {
+    document.body.classList.add("is--loaded");
+  }, 4000);
 
   const paths = container.querySelectorAll("path");
   const lengths = [];
@@ -210,6 +227,8 @@ window.addEventListener("load", () => {
     } else {
       target = 1;
       isLoaded = true;
+      window.scrollTo(0, 0);
+      document.body.classList.add("is--loaded");
       smoothLoop();
     }
   }
@@ -260,9 +279,6 @@ window.addEventListener("load", () => {
 
   loadAnim();
 });
-
-
-
 
 /* Rainbox SVG animation JS End */
 
@@ -375,6 +391,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* Banner Text Animation JS Start */
 
+
 /* Marquee JS Start */
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -402,6 +419,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 /* Marquee JS End */
+
 
 /* Speaker Card Cursor JS Start */
 
@@ -604,3 +622,233 @@ window.addEventListener("load", () => {
 });
 
 /* About Bottom Shape JS End */
+
+
+/* Header Link JS Start */
+
+document.addEventListener("DOMContentLoaded", function () {
+  const anchorLinks = document.querySelectorAll("[data-anchor-target]");
+
+  anchorLinks.forEach(function (link) {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const targetId = this.getAttribute("data-anchor-target");
+      const targetSection = document.getElementById(targetId);
+
+      if (!targetSection) return;
+
+      const header = document.querySelector(".header--main");
+      const headerHeight = header ? header.offsetHeight : 0;
+
+      const targetPosition =
+        targetSection.getBoundingClientRect().top +
+        window.pageYOffset -
+        headerHeight;
+
+      window.scrollTo({
+        top: targetPosition,
+        behavior: "smooth"
+      });
+    });
+  });
+});
+
+/* Header Link JS End */
+
+
+/* Sunny Fixed JS Start */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sunChatCombo = document.querySelector(".sun-chat-combo");
+  const chatCloud = document.querySelector(".chat-cloud");
+  const chatText = document.querySelector(".chat-cloud__p");
+
+  if (!sunChatCombo || !chatCloud || !chatText) return;
+
+  // ==============================
+  // Settings
+  // ==============================
+  const fixedPoint = 300;
+  const fullText = "Friday 8th August, Manchester, UK";
+
+  const showDelay = 300;
+  const typingSpeed = 45;
+  const removeSpeed = 25;
+
+  let typingTimer = null;
+  let removeTimer = null;
+  let delayTimer = null;
+
+  let isTyping = false;
+  let isRemoving = false;
+
+  // ==============================
+  // Initial State
+  // ==============================
+  chatCloud.classList.remove("is--show");
+  chatText.textContent = "...";
+
+  // ==============================
+  // Clear All Timers
+  // ==============================
+  function clearAllTimers() {
+    clearTimeout(delayTimer);
+    clearInterval(typingTimer);
+    clearInterval(removeTimer);
+
+    delayTimer = null;
+    typingTimer = null;
+    removeTimer = null;
+
+    isTyping = false;
+    isRemoving = false;
+  }
+
+  // ==============================
+  // Typing Animation
+  // ==============================
+  function typeText() {
+    clearInterval(typingTimer);
+    clearInterval(removeTimer);
+
+    isTyping = true;
+    isRemoving = false;
+
+    chatText.textContent = "";
+
+    let index = 0;
+
+    typingTimer = setInterval(() => {
+      // Stop if hover removed
+      if (!sunChatCombo.matches(":hover")) {
+        clearInterval(typingTimer);
+        typingTimer = null;
+        isTyping = false;
+
+        removeText();
+        return;
+      }
+
+      chatText.textContent += fullText.charAt(index);
+      index++;
+
+      if (index >= fullText.length) {
+        clearInterval(typingTimer);
+        typingTimer = null;
+        isTyping = false;
+      }
+    }, typingSpeed);
+  }
+
+  // ==============================
+  // Remove Text Animation
+  // ==============================
+  function removeText() {
+    clearInterval(typingTimer);
+    clearInterval(removeTimer);
+    clearTimeout(delayTimer);
+
+    typingTimer = null;
+    delayTimer = null;
+
+    isTyping = false;
+    isRemoving = true;
+
+    removeTimer = setInterval(() => {
+      const currentText = chatText.textContent;
+
+      // Remove one character
+      if (currentText.length > 0) {
+        chatText.textContent = currentText.slice(0, -1);
+      }
+
+      // Once text is completely removed
+      if (chatText.textContent.length === 0) {
+        clearInterval(removeTimer);
+        removeTimer = null;
+        isRemoving = false;
+
+        // Show dots first
+        chatText.textContent = "...";
+
+        // Small delay so "..." is visible
+        setTimeout(() => {
+          // Only hide if user is still NOT hovering
+          if (!sunChatCombo.matches(":hover")) {
+            chatCloud.classList.remove("is--show");
+          }
+        }, 150);
+      }
+    }, removeSpeed);
+  }
+
+  // ==============================
+  // Show Chat Cloud
+  // ==============================
+  function showChatCloud() {
+    clearAllTimers();
+
+    chatCloud.classList.add("is--show");
+
+    chatText.textContent = "...";
+
+    // Delay before typing
+    delayTimer = setTimeout(() => {
+      if (sunChatCombo.matches(":hover")) {
+        typeText();
+      }
+    }, showDelay);
+  }
+
+  // ==============================
+  // Hide Chat Cloud
+  // ==============================
+  function hideChatCloud() {
+    clearTimeout(delayTimer);
+    clearInterval(typingTimer);
+
+    delayTimer = null;
+    typingTimer = null;
+
+    isTyping = false;
+
+    // IMPORTANT:
+    // Cloud remains visible while text is removing
+    removeText();
+  }
+
+  // ==============================
+  // Hover Events
+  // ==============================
+  sunChatCombo.addEventListener("mouseenter", showChatCloud);
+
+  sunChatCombo.addEventListener("mouseleave", hideChatCloud);
+
+  // ==============================
+  // Scroll Logic
+  // ==============================
+  function handleScroll() {
+    if (window.scrollY >= fixedPoint) {
+      sunChatCombo.classList.add("is--fixed");
+    } else {
+      sunChatCombo.classList.remove("is--fixed");
+
+      if (!sunChatCombo.matches(":hover")) {
+        clearAllTimers();
+
+        chatText.textContent = "...";
+        chatCloud.classList.remove("is--show");
+      }
+    }
+  }
+
+  window.addEventListener("scroll", handleScroll, {
+    passive: true
+  });
+
+  // Initial check
+  handleScroll();
+});
+
+/* Sunny Fixed JS End */
