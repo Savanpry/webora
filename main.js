@@ -180,107 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* Rainbox SVG animation JS Start */
 
-// window.addEventListener("load", () => {
-//   const container = document.querySelector(".rainbox--sides");
-//   const bannerTitle = document.querySelector(".banner--title");
-
-//   if (!container || !bannerTitle) {
-//     document.body.classList.add("is--loaded");
-//     return;
-//   }
-
-//   setTimeout(() => {
-//     document.body.classList.add("is--loaded");
-//   }, 4000);
-
-//   const paths = container.querySelectorAll("path");
-//   const lengths = [];
-
-//   paths.forEach((path, i) => {
-//     const len = path.getTotalLength();
-
-//     lengths[i] = len;
-
-//     path.style.strokeDasharray = `${len}px`;
-//     path.style.strokeDashoffset = len;
-//   });
-
-//   let progress = 0;
-//   let target = 0;
-//   let isLoaded = false;
-//   let reverseEnabled = false;
-
-//   function loadAnim() {
-//     progress += 0.01;
-
-//     if (progress > 1) {
-//       progress = 1;
-//     }
-
-//     paths.forEach((path, i) => {
-//       path.style.strokeDashoffset =
-//         lengths[i] * (1 - progress);
-//     });
-
-//     if (progress < 1) {
-//       requestAnimationFrame(loadAnim);
-//     } else {
-//       target = 1;
-//       isLoaded = true;
-//       window.scrollTo(0, 0);
-//       document.body.classList.add("is--loaded");
-//       smoothLoop();
-//     }
-//   }
-
-//   const observer = new IntersectionObserver(
-//     (entries) => {
-//       entries.forEach((entry) => {
-//         reverseEnabled = entry.isIntersecting;
-//       });
-//     },
-//     {
-//       threshold: 0.1
-//     }
-//   );
-
-//   observer.observe(bannerTitle);
-
-//   window.addEventListener(
-//     "wheel",
-//     (e) => {
-//       if (!isLoaded) return;
-
-//       if (!reverseEnabled) return;
-
-//       const speed = 0.0015;
-
-//       target -= e.deltaY * speed;
-
-//       target = Math.min(Math.max(target, 0), 1);
-//     },
-//     { passive: true }
-//   );
-
-//   function smoothLoop() {
-//     progress += (target - progress) * 0.25;
-
-//     if (Math.abs(target - progress) < 0.0001) {
-//       progress = target;
-//     }
-
-//     paths.forEach((path, i) => {
-//       path.style.strokeDashoffset =
-//         lengths[i] * (1 - progress);
-//     });
-
-//     requestAnimationFrame(smoothLoop);
-//   }
-
-//   loadAnim();
-// });
-
-
 window.addEventListener("load", () => {
   const container = document.querySelector(".rainbox--sides");
   const bannerTitle = document.querySelector(".banner--title");
@@ -290,7 +189,6 @@ window.addEventListener("load", () => {
     return;
   }
 
-  // Initially hide rainbow
   container.classList.remove("is--animate");
 
   setTimeout(() => {

@@ -55,6 +55,35 @@
       font-style: normal;
       font-display: swap;
     }
+
+    .chat-cloud {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(10px);
+
+      transition:
+        opacity 0.35s ease,
+        visibility 0.35s ease,
+        transform 0.35s ease;
+    }
+
+    .chat-cloud.is--show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .rainbox--sides {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .rainbox--sides.is--animate {
+      opacity: 1;
+      visibility: visible;
+    }
   </style>
 
 </head>
