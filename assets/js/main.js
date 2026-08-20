@@ -189,6 +189,8 @@ window.addEventListener("load", () => {
     return;
   }
 
+  container.classList.remove("is--animate");
+
   setTimeout(() => {
     document.body.classList.add("is--loaded");
   }, 4000);
@@ -211,6 +213,10 @@ window.addEventListener("load", () => {
   let reverseEnabled = false;
 
   function loadAnim() {
+    if (progress === 0) {
+      container.classList.add("is--animate");
+    }
+
     progress += 0.01;
 
     if (progress > 1) {
@@ -227,8 +233,10 @@ window.addEventListener("load", () => {
     } else {
       target = 1;
       isLoaded = true;
+
       window.scrollTo(0, 0);
       document.body.classList.add("is--loaded");
+
       smoothLoop();
     }
   }
@@ -250,7 +258,6 @@ window.addEventListener("load", () => {
     "wheel",
     (e) => {
       if (!isLoaded) return;
-
       if (!reverseEnabled) return;
 
       const speed = 0.0015;
@@ -277,8 +284,10 @@ window.addEventListener("load", () => {
     requestAnimationFrame(smoothLoop);
   }
 
+  // Start animation
   loadAnim();
 });
+
 
 /* Rainbox SVG animation JS End */
 
@@ -666,9 +675,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!sunChatCombo || !chatCloud || !chatText) return;
 
-  // ==============================
-  // Settings
-  // ==============================
   const fixedPoint = 300;
   const fullText = "Friday 8th August, Manchester, UK";
 
@@ -683,15 +689,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let isTyping = false;
   let isRemoving = false;
 
-  // ==============================
-  // Initial State
-  // ==============================
   chatCloud.classList.remove("is--show");
   chatText.textContent = "...";
 
-  // ==============================
-  // Clear All Timers
-  // ==============================
   function clearAllTimers() {
     clearTimeout(delayTimer);
     clearInterval(typingTimer);
@@ -705,9 +705,6 @@ document.addEventListener("DOMContentLoaded", () => {
     isRemoving = false;
   }
 
-  // ==============================
-  // Typing Animation
-  // ==============================
   function typeText() {
     clearInterval(typingTimer);
     clearInterval(removeTimer);
@@ -720,7 +717,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let index = 0;
 
     typingTimer = setInterval(() => {
-      // Stop if hover removed
       if (!sunChatCombo.matches(":hover")) {
         clearInterval(typingTimer);
         typingTimer = null;
@@ -741,9 +737,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, typingSpeed);
   }
 
-  // ==============================
-  // Remove Text Animation
-  // ==============================
   function removeText() {
     clearInterval(typingTimer);
     clearInterval(removeTimer);
@@ -758,23 +751,18 @@ document.addEventListener("DOMContentLoaded", () => {
     removeTimer = setInterval(() => {
       const currentText = chatText.textContent;
 
-      // Remove one character
       if (currentText.length > 0) {
         chatText.textContent = currentText.slice(0, -1);
       }
 
-      // Once text is completely removed
       if (chatText.textContent.length === 0) {
         clearInterval(removeTimer);
         removeTimer = null;
         isRemoving = false;
 
-        // Show dots first
         chatText.textContent = "...";
 
-        // Small delay so "..." is visible
         setTimeout(() => {
-          // Only hide if user is still NOT hovering
           if (!sunChatCombo.matches(":hover")) {
             chatCloud.classList.remove("is--show");
           }
@@ -783,9 +771,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, removeSpeed);
   }
 
-  // ==============================
-  // Show Chat Cloud
-  // ==============================
   function showChatCloud() {
     clearAllTimers();
 
@@ -793,7 +778,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     chatText.textContent = "...";
 
-    // Delay before typing
     delayTimer = setTimeout(() => {
       if (sunChatCombo.matches(":hover")) {
         typeText();
@@ -801,9 +785,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, showDelay);
   }
 
-  // ==============================
-  // Hide Chat Cloud
-  // ==============================
   function hideChatCloud() {
     clearTimeout(delayTimer);
     clearInterval(typingTimer);
@@ -813,21 +794,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     isTyping = false;
 
-    // IMPORTANT:
-    // Cloud remains visible while text is removing
     removeText();
   }
 
-  // ==============================
-  // Hover Events
-  // ==============================
   sunChatCombo.addEventListener("mouseenter", showChatCloud);
 
   sunChatCombo.addEventListener("mouseleave", hideChatCloud);
 
-  // ==============================
-  // Scroll Logic
-  // ==============================
   function handleScroll() {
     if (window.scrollY >= fixedPoint) {
       sunChatCombo.classList.add("is--fixed");
@@ -847,7 +820,6 @@ document.addEventListener("DOMContentLoaded", () => {
     passive: true
   });
 
-  // Initial check
   handleScroll();
 });
 

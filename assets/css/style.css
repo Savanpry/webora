@@ -2770,22 +2770,3 @@ body.is--loaded .main--wrapper>footer {
     }
   }
 }
-
-
-.chat-cloud {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateY(10px);
-
-  transition:
-    opacity 0.35s ease,
-    visibility 0.35s ease,
-    transform 0.35s ease;
-}
-
-.chat-cloud.is--show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
